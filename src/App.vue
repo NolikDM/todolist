@@ -4,7 +4,15 @@
   </div>
 </template>
 
-<style lang="scss">
+<style> //lang="scss"
+* {
+  border-sizing: border-box;
+}
+
+.container {
+
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -26,3 +34,4 @@
   }
 }
 </style>
+
