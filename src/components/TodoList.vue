@@ -7,6 +7,7 @@
       v-model="newTodo"
       @keyup.enter="addTodo"
     />
+    <div v-if="$store.state.loading" class="lds-hourglass"></div>
     <transition-group
       name="fade"
       enter-active-class="animated fadeInUp"
@@ -59,6 +60,9 @@ export default {
       idForTodo: 3,
       beforeEditCache: ""
     };
+  },
+  created() {
+    this.$store.dispatch("retrieveTodos");
   },
   computed: {
     remaining() {
@@ -192,5 +196,39 @@ button {
 .fade-enter,
 .fade-leave-to {
   opacity: 0;
+}
+
+//CSS Spinning Loader
+.lds-hourglass {
+  display: block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+  margin: auto;
+}
+.lds-hourglass:after {
+  content: " ";
+  display: block;
+  border-radius: 50%;
+  width: 0;
+  height: 0;
+  margin: 8px;
+  box-sizing: border-box;
+  border: 32px solid lightskyblue;
+  border-color: lightskyblue transparent lightskyblue transparent;
+  animation: lds-hourglass 1.2s infinite;
+}
+@keyframes lds-hourglass {
+  0% {
+    transform: rotate(0);
+    animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+  }
+  50% {
+    transform: rotate(900deg);
+    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+  100% {
+    transform: rotate(1800deg);
+  }
 }
 </style>
