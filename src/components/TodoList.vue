@@ -1,5 +1,7 @@
 <template>
-  <div>
+  <div class="container">
+    <div class="flex-center">TodoList</div>
+    <div v-if="$store.state.loading" class="lds-hourglass"></div>
     <input
       type="text"
       class="todo-input"
@@ -7,7 +9,6 @@
       v-model="newTodo"
       @keyup.enter="addTodo"
     />
-    <div v-if="$store.state.loading" class="lds-hourglass"></div>
     <transition-group
       name="fade"
       enter-active-class="animated fadeInUp"
@@ -25,6 +26,7 @@
       <todo-check-all></todo-check-all>
       <todo-items-remaining :remaining="remaining"></todo-items-remaining>
     </div>
+    <!-- end extra-container -->
 
     <div class="extra-container">
       <todo-filtered></todo-filtered>
@@ -35,6 +37,7 @@
         </transition>
       </div>
     </div>
+    <!-- end extra-container -->
   </div>
 </template>
 
@@ -62,6 +65,7 @@ export default {
     };
   },
   created() {
+    this.$store.dispatch("initRealTimeListeners");
     this.$store.dispatch("retrieveTodos");
   },
   computed: {

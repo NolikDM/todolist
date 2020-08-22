@@ -7,6 +7,7 @@
       <li><router-link :to="{ name: 'login' }">Login</router-link></li>
       <!-- <li><router-link :to="{ name: 'home' }">Home</router-link></li> -->
       <!-- <li><router-link :to="{ name: 'about' }">About</router-link></li> -->
+      <button @click.prevent="logout">Logout</button>
     </ul>
 
     <router-view></router-view>
@@ -14,7 +15,14 @@
 </template>
 
 <script>
-export default {};
+export default {
+  methods: {
+    async logout() {
+      await this.$store.dispatch("logout");
+      this.$router.push("/login?message=logout");
+    }
+  }
+};
 </script>
 
 <style>
@@ -37,7 +45,6 @@ export default {};
   display: flex;
   justify-content: center;
 }
-
 .nav {
   display: flex;
   list-style: none;

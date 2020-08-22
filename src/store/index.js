@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import db from "../firebase";
+import auth from "./auth";
 
 Vue.use(Vuex);
 
@@ -38,6 +39,7 @@ export default new Vuex.Store({
         id: todo.id,
         title: todo.title,
         completed: false,
+        timestamp: new Date(),
         editing: false
       });
     },
@@ -52,7 +54,9 @@ export default new Vuex.Store({
     },
     deleteTodo(state, id) {
       const index = state.todos.findIndex(item => item.id == id);
-      state.todos.splice(index, 1);
+      if (index >= 0) {
+        state.todos.splice(index, 1);
+      }
     },
     checkAll(state, checked) {
       state.todos.forEach(todo => (todo.completed = checked));
@@ -68,6 +72,39 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    initRealTimeListeners(context) {
+      db.collection("todos").onSnapshot(snapshot => {
+        snapshot.docChanges.forEach(change => {
+          if (change.type === "added") {
+            // console.log("Added", change.doc.data());
+            const source = change.doc.metadata.hasPendingWrites
+              ? "Local"
+              : "Server";
+            if (source) {
+              context.commit("addTodo", {
+                id: change.doc.id,
+                title: change.doc.data().title,
+                completed: false
+              });
+            }
+          }
+          if (change.type === "modified") {
+            context.commit("updateTodo", {
+              id: change.doc.id,
+              title: change.doc.data().title,
+              completed: change.doc.data().completed
+            });
+          }
+          if (change.type === "removed") {
+            context.commit("deleteTodo", {
+              id: change.doc.id,
+              title: change.doc.data().title,
+              completed: change.doc.data().completed
+            });
+          }
+        });
+      });
+    },
     retrieveTodos(context) {
       context.state.loading = true;
       db.collection("todos")
@@ -111,12 +148,15 @@ export default new Vuex.Store({
     updateTodo(context, todo) {
       db.collection("todos")
         .doc(todo.id)
-        .set({
-          id: todo.id,
-          title: todo.title,
-          completed: todo.completed,
-          timestamp: new Date()
-        })
+        .set(
+          {
+            id: todo.id,
+            title: todo.title,
+            completed: todo.completed
+            // timestamp: new Date()
+          },
+          { merge: true }
+        )
         .then(() => {
           context.commit("updateTodo", todo);
         });
@@ -160,5 +200,7 @@ export default new Vuex.Store({
         });
     }
   },
-  modules: {}
+  modules: {
+    auth
+  }
 });
