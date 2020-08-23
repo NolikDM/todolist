@@ -1,9 +1,21 @@
 <template>
   <div>
-    <label>
+    <form action="#">
+      <p>
+        <label>
+          <input
+            type="checkbox"
+            :checked="!anyRemaining"
+            @change="allChecked"
+          />
+          <span>Check All</span>
+        </label>
+      </p>
+    </form>
+    <!-- <label>
       <input type="checkbox" :checked="!anyRemaining" @change="allChecked" />
       Check All
-    </label>
+    </label> -->
   </div>
 </template>
 
