@@ -1,13 +1,26 @@
-import Vue from "vue";
-import Vuex from "vuex";
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports["default"] = void 0;
+
+var _vue = _interopRequireDefault(require("vue"));
+
+var _vuex = _interopRequireDefault(require("vuex"));
+
+var _auth = _interopRequireDefault(require("./auth"));
+
+var _task = _interopRequireDefault(require("./task"));
+
+var _todo = _interopRequireDefault(require("./todo"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
 //import firebase from "firebase/app";
-import auth from "./auth";
-import task from "./task";
-import todo from "./todo";
+_vue["default"].use(_vuex["default"]);
 
-Vue.use(Vuex);
-
-export default new Vuex.Store({
+var _default = new _vuex["default"].Store({
   state: {
     loading: true,
     filter: "all",
@@ -15,48 +28,61 @@ export default new Vuex.Store({
     tasks: []
   },
   getters: {
-    remaining(state) {
-      return state.todos.filter(todo => !todo.completed).length;
+    remaining: function remaining(state) {
+      return state.todos.filter(function (todo) {
+        return !todo.completed;
+      }).length;
     },
-    anyRemaining(state, getters) {
+    anyRemaining: function anyRemaining(state, getters) {
       return getters.remaining != 0;
     },
-    todosFiltered(state) {
+    todosFiltered: function todosFiltered(state) {
       if (state.filter == "all") {
         return state.todos;
       } else if (state.filter == "active") {
-        return state.todos.filter(todo => !todo.completed);
+        return state.todos.filter(function (todo) {
+          return !todo.completed;
+        });
       } else if (state.filter == "completed") {
-        return state.todos.filter(todo => todo.completed);
+        return state.todos.filter(function (todo) {
+          return todo.completed;
+        });
       }
 
       return state.todos;
     },
-    showClearCompletedButton(state) {
-      return state.todos.filter(todo => todo.completed).length > 0;
+    showClearCompletedButton: function showClearCompletedButton(state) {
+      return state.todos.filter(function (todo) {
+        return todo.completed;
+      }).length > 0;
     },
-    tasksFiltered(state) {
+    tasksFiltered: function tasksFiltered(state) {
       return state.tasks;
     }
   },
   mutations: {
-    addTask(state, task) {
+    addTask: function addTask(state, task) {
       state.tasks.push({
         id: task.id,
         title: task.title,
         editing: false
       });
     },
-    updateTask(state, task) {
-      const index = state.tasks.findIndex(item => item.id == task.id);
+    updateTask: function updateTask(state, task) {
+      var index = state.tasks.findIndex(function (item) {
+        return item.id == task.id;
+      });
       state.tasks.splice(index, 1, {
         id: task.id,
         title: task.title,
         editing: task.editing
       });
     },
-    deleteTask(state, id) {
-      const index = state.tasks.findIndex(item => item.id == id);
+    deleteTask: function deleteTask(state, id) {
+      var index = state.tasks.findIndex(function (item) {
+        return item.id == id;
+      });
+
       if (index >= 0) {
         state.tasks.splice(index, 1);
       }
@@ -64,7 +90,7 @@ export default new Vuex.Store({
     // retrieveTasks(state, tasks) {
     //   state.tasks = tasks;
     // },
-    addTodo(state, todo) {
+    addTodo: function addTodo(state, todo) {
       state.todos.push({
         id: todo.id,
         title: todo.title,
@@ -73,8 +99,10 @@ export default new Vuex.Store({
         editing: false
       });
     },
-    updateTodo(state, todo) {
-      const index = state.todos.findIndex(item => item.id == todo.id);
+    updateTodo: function updateTodo(state, todo) {
+      var index = state.todos.findIndex(function (item) {
+        return item.id == todo.id;
+      });
       state.todos.splice(index, 1, {
         id: todo.id,
         title: todo.title,
@@ -82,22 +110,29 @@ export default new Vuex.Store({
         editing: todo.editing
       });
     },
-    deleteTodo(state, id) {
-      const index = state.todos.findIndex(item => item.id == id);
+    deleteTodo: function deleteTodo(state, id) {
+      var index = state.todos.findIndex(function (item) {
+        return item.id == id;
+      });
+
       if (index >= 0) {
         state.todos.splice(index, 1);
       }
     },
-    checkAll(state, checked) {
-      state.todos.forEach(todo => (todo.completed = checked));
+    checkAll: function checkAll(state, checked) {
+      state.todos.forEach(function (todo) {
+        return todo.completed = checked;
+      });
     },
-    updateFilter(state, filter) {
+    updateFilter: function updateFilter(state, filter) {
       state.filter = filter;
     },
-    clearCompleted(state) {
-      state.todos = state.todos.filter(todo => !todo.completed);
+    clearCompleted: function clearCompleted(state) {
+      state.todos = state.todos.filter(function (todo) {
+        return !todo.completed;
+      });
     },
-    retrieveTodos(state, todos) {
+    retrieveTodos: function retrieveTodos(state, todos) {
       state.todos = todos;
     }
   },
@@ -118,7 +153,6 @@ export default new Vuex.Store({
     //       snapshot.docChanges.forEach(change => {
     //         if (change.type === 'added') {
     //           const source = change.doc.metadata.hasPendingWrites ? 'Local' : 'Server'
-
     //           if (source === 'Server') {
     //             context.commit('addTodo', {
     //               id: change.doc.id,
@@ -154,18 +188,15 @@ export default new Vuex.Store({
     //       }
     //       tempTodos.push(data)
     //     })
-
     //     context.commit('updateLoading', false)
     //     const tempTodosSorted = tempTodos.sort((a, b) => {
     //       return a.timestamp.seconds - b.timestamp.seconds
     //     })
-
     //     context.commit('retrieveTodos', tempTodosSorted)
     //   })
     // },
-    addTodo(context, todo) {
-      context.commit("addTodo", todo);
-      // db.collection('todos').add({
+    addTodo: function addTodo(context, todo) {
+      context.commit("addTodo", todo); // db.collection('todos').add({
       //   title: todo.title,
       //   completed: false,
       //   timestamp: new Date(),
@@ -178,9 +209,8 @@ export default new Vuex.Store({
       //   })
       // })
     },
-    updateTodo(context, todo) {
-      context.commit("updateTodo", todo);
-      // db.collection('todos').doc(todo.id).set({
+    updateTodo: function updateTodo(context, todo) {
+      context.commit("updateTodo", todo); // db.collection('todos').doc(todo.id).set({
       //   id: todo.id,
       //   title: todo.title,
       //   completed: todo.completed,
@@ -190,16 +220,14 @@ export default new Vuex.Store({
       //   context.commit('updateTodo', todo)
       // })
     },
-    deleteTodo(context, id) {
-      context.commit("deleteTodo", id);
-      // db.collection('todos').doc(id).delete()
+    deleteTodo: function deleteTodo(context, id) {
+      context.commit("deleteTodo", id); // db.collection('todos').doc(id).delete()
       //   .then(() => {
       //     context.commit('deleteTodo', id)
       //   })
     },
-    checkAll(context, checked) {
-      context.commit("checkAll", checked);
-      // db.collection('todos').get()
+    checkAll: function checkAll(context, checked) {
+      context.commit("checkAll", checked); // db.collection('todos').get()
       // .then(querySnapshot => {
       //   querySnapshot.forEach(doc => {
       //     doc.ref.update({
@@ -211,12 +239,11 @@ export default new Vuex.Store({
       //   })
       // })
     },
-    updateFilter(context, filter) {
+    updateFilter: function updateFilter(context, filter) {
       context.commit("updateFilter", filter);
     },
-    clearCompleted(context) {
-      context.commit("clearCompleted");
-      // db.collection('todos').where('completed', '==', true).get()
+    clearCompleted: function clearCompleted(context) {
+      context.commit("clearCompleted"); // db.collection('todos').where('completed', '==', true).get()
       //   .then(querySnapshot => {
       //     querySnapshot.forEach(doc => {
       //       doc.ref.delete()
@@ -228,8 +255,10 @@ export default new Vuex.Store({
     }
   },
   modules: {
-    auth,
-    task,
-    todo
+    auth: _auth["default"],
+    task: _task["default"],
+    todo: _todo["default"]
   }
 });
+
+exports["default"] = _default;

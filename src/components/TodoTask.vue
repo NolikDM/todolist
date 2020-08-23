@@ -17,16 +17,16 @@
             enter-active-class="animated fadeInUp"
             leave-active-class="animated fadeOutDown"
           >
-            <task-item
+            <!-- <task-item
               v-for="task in tasksFiltered"
               :key="task.id"
               :task="task"
-            ></task-item>
-            <!-- <div v-for="task in tasks" :key="task.id" class="task-item">
+            ></task-item> -->
+            <div v-for="task in tasksFiltered" :key="task.id" class="task-item">
               <div class="task-item-left">
                 <div
                   v-if="!task.editing"
-                  @dblclick="editTask(task)"
+                  @dblclick="editTask"
                   class="task-item-label"
                 >
                   {{ task.title }}
@@ -36,9 +36,9 @@
                   class="task-item-edit"
                   type="text"
                   v-model="task.title"
-                  @blur="doneEdit(task)"
-                  @keyup.enter="doneEdit(task)"
-                  @keyup.esc="cancelEdit(task)"
+                  @blur="doneEdit"
+                  @keyup.enter="doneEdit"
+                  @keyup.esc="cancelEdit"
                   v-focus
                 />
               </div>
@@ -47,7 +47,7 @@
                   >&times;</span
                 >
               </div>
-            </div> -->
+            </div>
           </transition-group>
         </div>
       </div>
@@ -56,33 +56,26 @@
 </template>
 
 <script>
-import TodoTaskItem from "./TodoTaskItem";
-
 export default {
   name: "todo-task",
-  components: {
-    TodoTaskItem
-  },
   data() {
     return {
       newTask: "",
       idForTask: 3,
       beforeEditCache: ""
-      // tasks: [
-      //   {
-      //     id: 1,
-      //     title: "Home tasks",
-      //     completed: false,
-      //     editing: false
-      //   },
-      //   {
-      //     id: 2,
-      //     title: "Work tasks",
-      //     completed: false,
-      //     editing: false
-      //   }
-      // ]
     };
+  },
+  // watch: {
+  //   task() {
+  //     this.title = this.task.title;
+  //   }
+  // },
+  directives: {
+    focus: {
+      inserted: function(el) {
+        el.focus();
+      }
+    }
   },
   computed: {
     tasksFiltered() {
@@ -102,6 +95,28 @@ export default {
 
       this.newTask = "";
       this.idForTask++;
+    },
+    removeTask(id) {
+      this.$store.dispatch("deleteTask", id);
+    },
+    editTask() {
+      this.beforeEditCache = this.title;
+      this.editing = true;
+    },
+    doneEdit() {
+      if (this.title.trim().length == "") {
+        this.title = this.beforeEditCache;
+      }
+      this.editing = false;
+      this.$store.dispatch("updateTask", {
+        id: this.id,
+        title: this.title,
+        editing: this.editing
+      });
+    },
+    cancelEdit() {
+      this.title = this.beforeEditCache;
+      this.editing = false;
     }
   }
 };
@@ -161,5 +176,34 @@ export default {
   &:focus {
     outline: none;
   }
+}
+button {
+  font-size: 14px;
+  background-color: white;
+  appearance: none;
+  border-width: 1px;
+  margin-right: 5px;
+
+  &:hover {
+    background: lightskyblue;
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.active {
+  background: lightskyblue;
+}
+// CSS Transitions
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

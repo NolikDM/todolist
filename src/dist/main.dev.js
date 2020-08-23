@@ -10,48 +10,48 @@ var _router = _interopRequireDefault(require("./router"));
 
 require("./registerServiceWorker");
 
-var _store = _interopRequireDefault(require("./store"));
-
-var _messagePlugin = _interopRequireDefault(require("@/utils/dist/message.plugin.dev"));
+var _index = _interopRequireDefault(require("./store/index.js"));
 
 require("materialize-css/dist/js/materialize.min");
 
+var _app = _interopRequireDefault(require("firebase/app"));
+
+require("firebase/auth");
+
+require("firebase/database");
+
+var _firebase_config = require("./firebase_config.js");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-// import Master from "./components/layouts/Master";
-//import LandingPage from "./components/marketing/LandingPage";
+//import messagePlugin from "@/utils/dist/message.plugin.dev";
 
 /* Firebase */
-// import firebase from "firebase/app";
-// import "firebase/auth";
-// import "firebase/database";
-//import firebaseConfig from "@/config/firebase-config"
 _vue["default"].prototype.$eventBus = new _vue["default"]();
-_vue["default"].config.productionTip = false;
-
-_vue["default"].use(_messagePlugin["default"]);
+_vue["default"].config.productionTip = false; //Vue.use(messagePlugin);
 
 _vue["default"].use(_vuelidate["default"]);
 /* Include Firebase to project */
-// firebase.initializeApp(firebaseConfig());
 
+
+_app["default"].initializeApp(_firebase_config.firebaseConfig);
 /* Initialization application */
-// let app;
-// firebase.auth().onAuthStateChanged(() => {
-//   if(!app) {
-//     app = new Vue({
-//       router,
-//       store,
-//       render: h => h(Master)
-//     }).$mount("#app");
-//   }
-// });
 
 
-new _vue["default"]({
-  router: _router["default"],
-  store: _store["default"],
-  render: function render(h) {
-    return h(_App["default"]);
+var app;
+
+_app["default"].auth().onAuthStateChanged(function () {
+  if (!app) {
+    app = new _vue["default"]({
+      router: _router["default"],
+      store: _index["default"],
+      render: function render(h) {
+        return h(_App["default"]);
+      }
+    }).$mount("#app");
   }
-}).$mount("#app");
+}); // new Vue({
+//   router,
+//   store,
+//   render: h => h(App)
+// }).$mount("#app");

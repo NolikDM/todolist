@@ -1,7 +1,14 @@
 <template>
   <div class="todo-item">
     <div class="todo-item-left">
-      <input type="checkbox" v-model="completed" @change="doneEdit" />
+      <form action="#">
+        <p>
+          <label>
+            <input type="checkbox" v-model="completed" @change="doneEdit" />
+            <span></span>
+          </label>
+        </p>
+      </form>
       <div
         v-if="!editing"
         @dblclick="editTodo"
@@ -87,7 +94,7 @@ export default {
         id: this.id,
         title: this.title,
         completed: this.completed,
-        editing: this.editing
+        editing: false
       });
     },
     cancelEdit() {

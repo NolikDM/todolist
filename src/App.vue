@@ -1,7 +1,5 @@
 <template>
-  <!-- class="container" -->
   <div id="app">
-    <!-- <todo-list></todo-list> -->
     <component :is="layout">
       <router-view />
     </component>
@@ -16,7 +14,6 @@ import MainLayout from "./components/layouts/MainLayout";
 export default {
   name: "App",
   components: {
-    //TodoList,
     EmptyLayout,
     MainLayout
   },

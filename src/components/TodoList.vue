@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="flex-center">TodoList</div>
-    <div v-if="$store.state.loading" class="lds-hourglass"></div>
+    <!-- <div v-if="$store.state.loading" class="lds-hourglass"></div> -->
     <input
       type="text"
       class="todo-input"
@@ -65,8 +65,8 @@ export default {
     };
   },
   created() {
-    this.$store.dispatch("initRealTimeListeners");
-    this.$store.dispatch("retrieveTodos");
+    //this.$store.dispatch("initRealTimeListeners");
+    //this.$store.dispatch("retrieveTodos");
   },
   computed: {
     remaining() {

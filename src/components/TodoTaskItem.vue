@@ -41,7 +41,6 @@ export default {
   watch: {
     task() {
       this.title = this.task.title;
-      // this.completed = this.task.completed;
     }
   },
   directives: {
