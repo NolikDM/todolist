@@ -12,6 +12,8 @@ require("./registerServiceWorker");
 
 var _index = _interopRequireDefault(require("./store/index.js"));
 
+var _message = _interopRequireDefault(require("@/utils/message.plugin"));
+
 require("materialize-css/dist/js/materialize.min");
 
 var _app = _interopRequireDefault(require("firebase/app"));
@@ -24,11 +26,11 @@ var _firebase_config = require("./firebase_config.js");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-//import messagePlugin from "@/utils/dist/message.plugin.dev";
-
 /* Firebase */
 _vue["default"].prototype.$eventBus = new _vue["default"]();
-_vue["default"].config.productionTip = false; //Vue.use(messagePlugin);
+_vue["default"].config.productionTip = false;
+
+_vue["default"].use(_message["default"]);
 
 _vue["default"].use(_vuelidate["default"]);
 /* Include Firebase to project */

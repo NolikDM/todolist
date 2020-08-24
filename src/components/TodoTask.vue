@@ -77,6 +77,9 @@ export default {
       }
     }
   },
+  // created() {
+  //   this.$store.dispatch("retrieveTasks");
+  // },
   computed: {
     tasksFiltered() {
       return this.$store.getters.tasksFiltered;

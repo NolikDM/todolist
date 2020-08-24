@@ -28,6 +28,9 @@ var _default = new _vuex["default"].Store({
     tasks: []
   },
   getters: {
+    error: function error(s) {
+      return s.error;
+    },
     remaining: function remaining(state) {
       return state.todos.filter(function (todo) {
         return !todo.completed;
@@ -61,6 +64,12 @@ var _default = new _vuex["default"].Store({
     }
   },
   mutations: {
+    setError: function setError(state, error) {
+      state.error = error;
+    },
+    clearError: function clearError(state) {
+      state.error = null;
+    },
     addTask: function addTask(state, task) {
       state.tasks.push({
         id: task.id,
@@ -95,7 +104,6 @@ var _default = new _vuex["default"].Store({
         id: todo.id,
         title: todo.title,
         completed: false,
-        //timestamp: new Date(),
         editing: false
       });
     },

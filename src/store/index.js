@@ -15,6 +15,7 @@ export default new Vuex.Store({
     tasks: []
   },
   getters: {
+    error: s => s.error,
     remaining(state) {
       return state.todos.filter(todo => !todo.completed).length;
     },
@@ -40,6 +41,12 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    setError(state, error) {
+      state.error = error;
+    },
+    clearError(state) {
+      state.error = null;
+    },
     addTask(state, task) {
       state.tasks.push({
         id: task.id,
@@ -69,7 +76,6 @@ export default new Vuex.Store({
         id: todo.id,
         title: todo.title,
         completed: false,
-        //timestamp: new Date(),
         editing: false
       });
     },

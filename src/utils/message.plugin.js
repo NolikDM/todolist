@@ -1,11 +1,13 @@
-// export default {
-//   install(Vue, options) {
-//     Vue.prototype.$message = function(html) {
-//       M.toast({ html });
-//     };
+import M from "materialize-css";
 
-//     Vue.prototype.$error = function(html) {
-//       M.toast({ html: "[error]: ${html}" });
-//     };
-//   }
-// };
+export default {
+  install(Vue) {
+    Vue.prototype.$message = function(html) {
+      M.toast({ html });
+    };
+
+    Vue.prototype.$error = function(html) {
+      M.toast({ html: `[Error]: ${html}` });
+    };
+  }
+};

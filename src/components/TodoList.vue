@@ -66,7 +66,7 @@ export default {
   },
   created() {
     //this.$store.dispatch("initRealTimeListeners");
-    //this.$store.dispatch("retrieveTodos");
+    this.$store.dispatch("retrieveTodos");
   },
   computed: {
     remaining() {

@@ -11,43 +11,43 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "d
 
 var _default = {
   actions: {
-    login: function login(_ref) {
-      var email, password;
+    login: function login(_ref, _ref2) {
+      var commit, email, password;
       return regeneratorRuntime.async(function login$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              email = _ref.email, password = _ref.password;
-              _context.prev = 1;
-              _context.next = 4;
+              commit = _ref.commit;
+              email = _ref2.email, password = _ref2.password;
+              _context.prev = 2;
+              _context.next = 5;
               return regeneratorRuntime.awrap(_app["default"].auth().signInWithEmailAndPassword(email, password));
 
-            case 4:
-              _context.next = 10;
+            case 5:
+              _context.next = 11;
               break;
 
-            case 6:
-              _context.prev = 6;
-              _context.t0 = _context["catch"](1);
-              // console.log(e.message);
-              console.log();
+            case 7:
+              _context.prev = 7;
+              _context.t0 = _context["catch"](2);
+              commit("setError", _context.t0);
               throw _context.t0;
 
-            case 10:
+            case 11:
             case "end":
               return _context.stop();
           }
         }
-      }, null, null, [[1, 6]]);
+      }, null, null, [[2, 7]]);
     },
-    register: function register(_ref2, _ref3) {
-      var dispatch, email, password, name, uid;
+    register: function register(_ref3, _ref4) {
+      var dispatch, commit, email, password, name, uid;
       return regeneratorRuntime.async(function register$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              dispatch = _ref2.dispatch;
-              email = _ref3.email, password = _ref3.password, name = _ref3.name;
+              dispatch = _ref3.dispatch, commit = _ref3.commit;
+              email = _ref4.email, password = _ref4.password, name = _ref4.name;
               _context2.prev = 2;
               _context2.next = 5;
               return regeneratorRuntime.awrap(_app["default"].auth().createUserWithEmailAndPassword(email, password));
@@ -70,7 +70,8 @@ var _default = {
             case 12:
               _context2.prev = 12;
               _context2.t0 = _context2["catch"](2);
-              console.log();
+              //console.log("EEEEE", e);
+              commit("setError", _context2.t0);
               throw _context2.t0;
 
             case 16:

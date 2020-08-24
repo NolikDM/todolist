@@ -4,7 +4,7 @@ import App from "./App.vue";
 import router from "./router";
 import "./registerServiceWorker";
 import store from "./store/index.js";
-//import messagePlugin from "@/utils/dist/message.plugin.dev";
+import messagePlugin from "@/utils/message.plugin";
 import "materialize-css/dist/js/materialize.min";
 
 /* Firebase */
@@ -17,7 +17,7 @@ Vue.prototype.$eventBus = new Vue();
 
 Vue.config.productionTip = false;
 
-//Vue.use(messagePlugin);
+Vue.use(messagePlugin);
 Vue.use(Vuelidate);
 
 /* Include Firebase to project */

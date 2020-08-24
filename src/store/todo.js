@@ -9,7 +9,7 @@ export default {
         const uid = await dispatch("getUid");
         const todo = await firebase
           .database()
-          .ref(`/users/${uid}/tasks/${taskId}/todos/todo`)
+          .ref(`/users/${uid}/tasks/${taskId}/todos`)
           .push({ title, taskId });
         return { title, taskId, id: todo.key };
       } catch (e) {

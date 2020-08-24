@@ -27,7 +27,7 @@ var _default = {
             case 5:
               uid = _context.sent;
               _context.next = 8;
-              return regeneratorRuntime.awrap(_app["default"].database().ref("/users/".concat(uid, "/tasks/").concat(taskId, "/todos/todo")).push({
+              return regeneratorRuntime.awrap(_app["default"].database().ref("/users/".concat(uid, "/tasks/").concat(taskId, "/todos")).push({
                 title: title,
                 taskId: taskId
               }));
