@@ -66,7 +66,7 @@ export default {
   },
   created() {
     //this.$store.dispatch("initRealTimeListeners");
-    this.$store.dispatch("retrieveTodos");
+    //this.$store.dispatch("retrieveTodos");
   },
   computed: {
     remaining() {
@@ -76,7 +76,7 @@ export default {
       return this.$store.getters.anyRemaining;
     },
     todosFiltered() {
-      return this.$store.getters.todosFiltered;
+      return this.$store.getters.todosFiltered(this.$route.params.id);
     },
     showClearCompletedButton() {
       return this.$store.getters.showClearCompletedButton;
@@ -89,7 +89,8 @@ export default {
       }
 
       this.$store.dispatch("addTodo", {
-        id: this.idForTodo,
+        // id: Date.now(),
+        id: this.$route.params.id,
         title: this.newTodo
       });
 

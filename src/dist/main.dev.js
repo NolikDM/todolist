@@ -52,8 +52,4 @@ _app["default"].auth().onAuthStateChanged(function () {
       }
     }).$mount("#app");
   }
-}); // new Vue({
-//   router,
-//   store,
-//   render: h => h(App)
-// }).$mount("#app");
+});

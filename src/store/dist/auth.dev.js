@@ -70,7 +70,6 @@ var _default = {
             case 12:
               _context2.prev = 12;
               _context2.t0 = _context2["catch"](2);
-              //console.log("EEEEE", e);
               commit("setError", _context2.t0);
               throw _context2.t0;
 

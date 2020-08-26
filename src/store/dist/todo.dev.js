@@ -5,158 +5,199 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports["default"] = void 0;
 
-var _app = _interopRequireDefault(require("firebase/app"));
+require("firebase/database");
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+require("firebase/auth");
 
+// import * as firebase from "firebase";
 var _default = {
+  state: {
+    loading: true,
+    filter: "all",
+    todos: []
+  },
+  getters: {
+    remaining: function remaining(state) {
+      return state.todos.filter(function (todo) {
+        return !todo.completed;
+      }).length;
+    },
+    anyRemaining: function anyRemaining(state, getters) {
+      return getters.remaining != 0;
+    },
+    todosFiltered: function todosFiltered(state) {
+      return function (id) {
+        var newTodos = state.todos.filter(function (todo) {
+          return todo.id === id;
+        });
+
+        if (state.filter == "all") {
+          return newTodos;
+        } else if (state.filter == "active") {
+          return newTodos.filter(function (todo) {
+            return !todo.completed;
+          });
+        } else if (state.filter == "completed") {
+          return newTodos.filter(function (todo) {
+            return todo.completed;
+          });
+        }
+
+        return state.todos;
+      };
+    },
+    showClearCompletedButton: function showClearCompletedButton(state) {
+      return state.todos.filter(function (todo) {
+        return todo.completed;
+      }).length > 0;
+    }
+  },
+  mutations: {
+    addTodo: function addTodo(state, todo) {
+      state.todos.push({
+        id: todo.id,
+        title: todo.title,
+        completed: false,
+        editing: false
+      });
+    },
+    updateTodo: function updateTodo(state, todo) {
+      var index = state.todos.findIndex(function (item) {
+        return item.id == todo.id;
+      });
+      state.todos.splice(index, 1, {
+        id: todo.id,
+        title: todo.title,
+        completed: todo.completed,
+        editing: todo.editing
+      });
+    },
+    deleteTodo: function deleteTodo(state, id) {
+      var index = state.todos.findIndex(function (item) {
+        return item.id == id;
+      });
+
+      if (index >= 0) {
+        state.todos.splice(index, 1);
+      }
+    },
+    checkAll: function checkAll(state, checked) {
+      state.todos.forEach(function (todo) {
+        return todo.completed = checked;
+      });
+    },
+    updateFilter: function updateFilter(state, filter) {
+      state.filter = filter;
+    },
+    clearCompleted: function clearCompleted(state) {
+      state.todos = state.todos.filter(function (todo) {
+        return !todo.completed;
+      });
+    },
+    retrieveTodos: function retrieveTodos(state, todos) {
+      state.todos = todos;
+    },
+    updateLoading: function updateLoading(state, loading) {
+      state.loading = loading;
+    }
+  },
   actions: {
-    // context, todo
-    addTodo: function addTodo(_ref, _ref2) {
-      var dispatch, commit, title, taskId, uid, todo;
-      return regeneratorRuntime.async(function addTodo$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              dispatch = _ref.dispatch, commit = _ref.commit;
-              title = _ref2.title, taskId = _ref2.taskId;
-              _context.prev = 2;
-              _context.next = 5;
-              return regeneratorRuntime.awrap(dispatch("getUid"));
-
-            case 5:
-              uid = _context.sent;
-              _context.next = 8;
-              return regeneratorRuntime.awrap(_app["default"].database().ref("/users/".concat(uid, "/tasks/").concat(taskId, "/todos")).push({
-                title: title,
-                taskId: taskId
-              }));
-
-            case 8:
-              todo = _context.sent;
-              return _context.abrupt("return", {
-                title: title,
-                taskId: taskId,
-                id: todo.key
-              });
-
-            case 12:
-              _context.prev = 12;
-              _context.t0 = _context["catch"](2);
-              commit("setError", _context.t0);
-              throw _context.t0;
-
-            case 16:
-            case "end":
-              return _context.stop();
-          }
-        }
-      }, null, null, [[2, 12]]);
+    // retrieveTodos(context) {
+    //   context.commit("updateLoading", true);
+    //   firebase
+    //     .collection("todos")
+    //     .get()
+    //     .then(querySnapshot => {
+    //       let tempTodos = [];
+    //       querySnapshot.forEach(doc => {
+    //         const data = {
+    //           id: doc.id,
+    //           title: doc.data().title,
+    //           completed: doc.data().completed,
+    //           timestamp: doc.data().timestamp
+    //         };
+    //         tempTodos.push(data);
+    //       });
+    //       context.commit("updateLoading", false);
+    //       const tempTodosSorted = tempTodos.sort((a, b) => {
+    //         return a.timestamp.seconds - b.timestamp.seconds;
+    //       });
+    //       context.commit("retrieveTodos", tempTodosSorted);
+    //     });
+    // },
+    addTodo: function addTodo(context, todo) {
+      context.commit("addTodo", todo); // firebase
+      //   .collection("todos")
+      //   .add({
+      //     title: todo.title,
+      //     completed: false,
+      //     timestamp: new Date()
+      //   })
+      //   .then(docRef => {
+      //     context.commit("addTodo", {
+      //       id: docRef.id,
+      //       title: todo.title,
+      //       completed: false
+      //     });
+      //   });
     },
-    // context, todo
-    updateTodo: function updateTodo(_ref3, _ref4) {
-      var dispatch, commit, taskId, uid, todo, result;
-      return regeneratorRuntime.async(function updateTodo$(_context2) {
-        while (1) {
-          switch (_context2.prev = _context2.next) {
-            case 0:
-              dispatch = _ref3.dispatch, commit = _ref3.commit;
-              taskId = _ref4.taskId;
-              _context2.prev = 2;
-              _context2.next = 5;
-              return regeneratorRuntime.awrap(dispatch("getUid"));
-
-            case 5:
-              uid = _context2.sent;
-              _context2.next = 8;
-              return regeneratorRuntime.awrap(_app["default"].database().ref("/users/".concat(uid, "/tasks/").concat(taskId, "/todo")).once("value"));
-
-            case 8:
-              _context2.t0 = _context2.sent.val();
-
-              if (_context2.t0) {
-                _context2.next = 11;
-                break;
-              }
-
-              _context2.t0 = {};
-
-            case 11:
-              todo = _context2.t0;
-              result = [];
-              Object.keys(todo).forEach(function (item) {
-                if (todo[item].taskId == taskId) {
-                  todo[item].id = item;
-                  var subtasks = [];
-
-                  if (todo[item].subtasks !== undefined) {
-                    Object.keys(todo[item].subtasks).forEach(function (sub) {
-                      todo[item].subtasks[sub].id = sub;
-                      subtasks.push(todo[item].subtasks[sub]);
-                    });
-                  }
-
-                  todo[item].subtasks = subtasks;
-                  result.push(todo[item]);
-                }
-              });
-              return _context2.abrupt("return", result);
-
-            case 17:
-              _context2.prev = 17;
-              _context2.t1 = _context2["catch"](2);
-              commit("setError", _context2.t1);
-              throw _context2.t1;
-
-            case 21:
-            case "end":
-              return _context2.stop();
-          }
-        }
-      }, null, null, [[2, 17]]);
+    updateTodo: function updateTodo(context, todo) {
+      context.commit("updateTodo", todo); // firebase
+      //   .collection("todos")
+      //   .doc(todo.id)
+      //   .set(
+      //     {
+      //       id: todo.id,
+      //       title: todo.title,
+      //       completed: todo.completed,
+      //       timestamp: todo.timestamp
+      //     },
+      //     { merge: true }
+      //   )
+      //   .then(() => {
+      //     context.commit("updateTodo", todo);
+      //   });
     },
-    //context, id
-    deleteTodo: function deleteTodo(_ref5, _ref6) {
-      var dispatch, commit, taskId, id, uid;
-      return regeneratorRuntime.async(function deleteTodo$(_context3) {
-        while (1) {
-          switch (_context3.prev = _context3.next) {
-            case 0:
-              dispatch = _ref5.dispatch, commit = _ref5.commit;
-              taskId = _ref6.taskId, id = _ref6.id;
-              _context3.prev = 2;
-              _context3.next = 5;
-              return regeneratorRuntime.awrap(dispatch("getUid"));
-
-            case 5:
-              uid = _context3.sent;
-
-              _app["default"].database().ref("/users/".concat(uid, "/tasks/").concat(taskId, "/todo/").concat(id)).remove();
-
-              _context3.next = 13;
-              break;
-
-            case 9:
-              _context3.prev = 9;
-              _context3.t0 = _context3["catch"](2);
-              commit("setError", _context3.t0);
-              throw _context3.t0;
-
-            case 13:
-            case "end":
-              return _context3.stop();
-          }
-        }
-      }, null, null, [[2, 9]]);
+    deleteTodo: function deleteTodo(context, id) {
+      context.commit("deleteTodo", id); // firebase
+      //   .collection("todos")
+      //   .doc(id)
+      //   .delete()
+      //   .then(() => {
+      //     context.commit("deleteTodo", id);
+      //   });
     },
     checkAll: function checkAll(context, checked) {
-      context.commit("checkAll", checked);
+      context.commit("checkAll", checked); // firebase
+      //   .collection("todos")
+      //   .get()
+      //   .then(querySnapshot => {
+      //     querySnapshot.forEach(doc => {
+      //       doc.ref
+      //         .update({
+      //           completed: checked
+      //         })
+      //         .then(() => {
+      //           context.commit("checkAll", checked);
+      //         });
+      //     });
+      //   });
     },
     updateFilter: function updateFilter(context, filter) {
       context.commit("updateFilter", filter);
     },
     clearCompleted: function clearCompleted(context) {
-      context.commit("clearCompleted");
+      context.commit("clearCompleted"); //   firebase
+      //     .collection("todos")
+      //     .where("completed", "==", true)
+      //     .get()
+      //     .then(querySnapshot => {
+      //       querySnapshot.forEach(doc => {
+      //         doc.ref.delete().then(() => {
+      //           context.commit("clearCompleted");
+      //         });
+      //       });
+      //     });
     }
   }
 };

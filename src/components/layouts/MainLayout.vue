@@ -5,8 +5,6 @@
       <li><router-link :to="{ name: 'todo' }">Todo</router-link></li>
       <li><router-link :to="{ name: 'register' }">Register</router-link></li>
       <li><router-link :to="{ name: 'login' }">Login</router-link></li>
-      <!-- <li><router-link :to="{ name: 'home' }">Home</router-link></li> -->
-      <!-- <li><router-link :to="{ name: 'about' }">About</router-link></li> -->
       <button @click.prevent="logout">Logout</button>
     </ul>
 
@@ -15,7 +13,19 @@
 </template>
 
 <script>
+import messages from "@/utils/messages";
+
 export default {
+  computed: {
+    error() {
+      return this.$store.getters.error;
+    }
+  },
+  watch: {
+    error(fbError) {
+      this.$error(messages[fbError.code] || "Oooops, something went wrong");
+    }
+  },
   methods: {
     async logout() {
       await this.$store.dispatch("logout");
